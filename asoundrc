@@ -1,0 +1,77 @@
+pcm.GenericStereoAu_playback {
+    type hw
+    card GenericStereoAu
+    device 0
+}
+
+pcm.GenericStereoAu_capture {
+    type hw
+    card GenericStereoAu
+    device 1
+}
+
+ctl.GenericStereoAu {
+    type hw
+    card GenericStereoAu
+}
+
+pcm.dmixer {
+    type dmix
+    ipc_key 1024
+    ipc_perm 0666
+    slave.pcm "GenericStereoAu_playback"
+    slave {
+        period_time 0
+        period_size 1024
+        buffer_size 4096
+        channels 2 
+    }
+    bindings {
+        0 0
+        1 1
+    }
+}
+
+pcm.dsnooper {
+    type dsnoop
+    ipc_key 2048
+    ipc_perm 0666 
+    slave.pcm "GenericStereoAu_capture"
+    slave 
+    {
+        period_time 0
+        period_size 1024
+        buffer_size 4096
+        channels 2
+        rate 48000
+    }
+}
+
+pcm.softvol_playback {
+    type softvol
+    slave.pcm "dmixer"
+    control {
+        name "Master"
+        card GenericStereoAu
+    }
+}
+
+pcm.softvol_capture {
+    type softvol
+    slave.pcm "dsnooper"
+    control {
+        name "Capture"
+        card GenericStereoAu
+    }
+}
+
+pcm.duplex {
+    type asym
+    playback.pcm "softvol_playback"
+    capture.pcm "softvol_capture"
+}
+
+pcm.!default {
+    type plug
+    slave.pcm "duplex"
+}
