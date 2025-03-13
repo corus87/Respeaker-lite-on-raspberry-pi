@@ -76,7 +76,7 @@ And playback:
 I've created an asoundrc config, I don't have much experience with Alsa but it works and does the following:
 
 - Created two soft volumes mixer (playback and capture).
-- Using dsnooper and dmixer to use the device by more then application. 
+- Using dsnooper and dmixer to use the device by more then one application. 
 - Sets the the microphone and playback device as default.
 - Sets the sample rate to 48khz (change this if you use the 16khz firmware)
 
